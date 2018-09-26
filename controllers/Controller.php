@@ -1,12 +1,12 @@
 <?php
 namespace controllers;
-class BlogsController{
+class Controller{
     public function index(){
-        view('blogs/index');
+        view('/index');
     }
     // 显示添加表单
     public function create(){
-        view('blogs/create');
+        view('/create');
     }
     //添加表单
     public function insert(){
@@ -14,7 +14,7 @@ class BlogsController{
     }
     // 显示修改表单
     public function edit(){
-        view('blogs/edit');
+        view('/edit');
     }
     // 修改表单
     public function update(){

@@ -7,10 +7,6 @@ class CodeController{
     public function make(){
         // 1接收参数
         $tableName = $_GET['name'];
-       
-
-
-
         // 2 生成控制器
         $cname = ucfirst($tableName).'Controller';
         //  echo $cname;
@@ -35,7 +31,18 @@ class CodeController{
         // 4生成试图文件
         // 生成试图目录
         @mkdir(ROOT . 'views/'.$tableName, 0777);
-
+        // 取出这个表中所有字段信息
+        $sql = "SHOW FULL FIELDS FROM $tableName";
+        $db = \libs\Db::make();
+        // 预处理
+        $stmt = $db->prepare($sql);
+        // 执行语句
+        $stmt->execute();
+        // 取出字段数据 
+        $fields = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // echo '<pre>';
+        // var_dump($fields);
         // create.html
         ob_start();
         include(ROOT . 'templates/create.html');

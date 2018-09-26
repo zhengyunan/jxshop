@@ -6,7 +6,7 @@ class Db{
     private function __clone(){} 
     private function __construct(){
         // 链接数据库
-        $this->_pdo = new \PDO('mysql:dbhost=127.0.0.1;dbname=jxshop','root','');
+        $this->_pdo = new \PDO('mysql:host=127.0.0.1;dbname=jxshop','root','');
         //设置编码
         $this->_pdo->exec('SET NAMES utf8');
     }
@@ -16,5 +16,11 @@ class Db{
         }
         return self::$_obj;
     } 
-        
+
+    public function prepare($sql){
+        return $this->_pdo->prepare($sql);
+    }
+    public function exec($sql){
+        return $this->_pdo->exec($sql);
+    }    
 }
