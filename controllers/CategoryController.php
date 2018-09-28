@@ -1,26 +1,56 @@
 <?php
 namespace controllers;
-class categoryController{
-    public function index(){
-        view('category/index');
+
+use models\Category;
+
+class CategoryController{
+    // 列表页
+    public function index()
+    {
+        $model = new Category;
+        $data = $model->findAll();
+        view('category/index', $data);
     }
-    // 显示添加表单
-    public function create(){
+
+    // 显示添加的表单
+    public function create()
+    {
         view('category/create');
     }
-    //添加表单
-    public function insert(){
 
+    // 处理添加表单
+    public function insert()
+    {
+        $model = new Category;
+        $model->fill($_POST);
+        $model->insert();
+        redirect('/category/index');
     }
-    // 显示修改表单
-    public function edit(){
-        view('category/edit');
-    }
-    // 修改表单
-    public function update(){
 
+    // 显示修改的表单
+    public function edit()
+    {
+        $model = new Category;
+        $data=$model->findOne($_GET['id']);
+        view('category/edit', [
+            'data' => $data,    
+        ]);
     }
-    public function delete(){
 
+    // 修改表单的方法
+    public function update()
+    {
+        $model = new Category;
+        $model->fill($_POST);
+        $model->update($_GET['id']);
+        redirect('/category/index');
+    }
+
+    // 删除
+    public function delete()
+    {
+        $model = new Category;
+        $model->delete($_GET['id']);
+        redirect('/category/index');
     }
 }
