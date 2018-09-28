@@ -36,12 +36,16 @@ class Model{
             $values[] = $v;
             $token[] = '?';
         }
+        
          $keys = implode(',',$keys);
-         $token = implode("','",$token);
-        $sql = "INSERT INTO {$this->table}($keys) VALUES('$token')";
-        // var_dump($sql);
+         $token = implode(',',$token);
+        
+        $sql = "INSERT INTO {$this->table}($keys) VALUES($token)";
+        // var_dump($sql);die;
         $stmt = $this->_db->prepare($sql);
+        // var_dump($stmt);die;
         return $stmt->execute($values);
+         
         $this->data['id']= $this->_db->lastInsertId();
         $this->_after_write();
         // $this->_db->exec($sql);
@@ -83,7 +87,7 @@ class Model{
             'order_way' => 'desc',
             'per_page'=>20,
         ];
-
+ 
         // 合并用户的配置
         if($options)
         {

@@ -1,5 +1,5 @@
 <?php
-
+// phpinfo();
 define('ROOT',__DIR__.'/../');
 
 // 引入函数文件
@@ -27,3 +27,13 @@ if(isset($_SERVER['PATH_INFO'])){
 
 $c = new $controller;
 $c->$action();
+
+
+// $memcache = new memcache; 
+// $memcache -> connect('127.0.0.1', 11211) or die("连接失败"); 
+// $memcache -> set('name', array('一个','两个')); 
+// $val = $memcache->get('name'); 
+// print_r($val[1]); 
+// $val2 = $memcache->getServerStatus();
+// print_r($val2); 
+// $memcache -> close(); 

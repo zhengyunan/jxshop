@@ -19,15 +19,20 @@
                         <tr>
                 <td class="label">品牌名称:</td>
                 <td>
-                                            <input type='text' size="80" name='brand_name' value='<?=$data['brand_name']?>'>
+                        
+                                         <input type='text' size="80" name='brand_name' value="<?=$data['brand_name']?>">
+                                         
                                         <font color="red">*</font>
                 </td>
             </tr>
                         <tr>
                 <td class="label">LOGO:</td>
                 <td>
-                                            <input type='text' size="80" name='logo' value='<?=$data['logo']?>'>
-                                        <font color="red">*</font>
+                        <div class='img_preview' >
+                                <img src="<?=$data['logo']?>" width='120' heigth='120'>
+                        </div>
+                    <input type='file' class="preview" size="80" name='logo'>
+                    <font color="red">*</font>
                 </td>
             </tr>
                     </table>
@@ -41,3 +46,5 @@
 <?=view('common/footer')?>
 </body>
 </html>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/img_preview.js"></script>
