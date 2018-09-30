@@ -44,10 +44,11 @@ class Model{
         // var_dump($sql);die;
         $stmt = $this->_db->prepare($sql);
         // var_dump($stmt);die;
-        return $stmt->execute($values);
+        $stmt->execute($values);
          
         $this->data['id']= $this->_db->lastInsertId();
         $this->_after_write();
+        // die;
         // $this->_db->exec($sql);
     }
     public function update($id){

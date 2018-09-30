@@ -23,6 +23,8 @@ class Brand extends Model
     }
 
     public function _delete_logo(){
+        var_dump($_GET);
+        die;
         $id = $_GET['id'];
         if(isset($id)){
            // 从数据库取出原来的logo
