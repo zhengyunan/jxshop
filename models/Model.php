@@ -87,6 +87,8 @@ class Model{
             'order_by' => 'id',
             'order_way' => 'desc',
             'per_page'=>20,
+            'join'=>'',
+            'groupby'=>'',
         ];
  
         // 合并用户的配置
@@ -103,7 +105,9 @@ class Model{
         
         $sql = "SELECT {$_option['fields']}
                  FROM {$this->table}
+                 {$_option['join']}
                  WHERE {$_option['where']} 
+                 {$_option['groupby']}
                  ORDER BY {$_option['order_by']} {$_option['order_way']} 
                  LIMIT $offset,{$_option['per_page']}";
 
@@ -147,5 +151,24 @@ class Model{
         }
         $this->data = $data;
         // var_dump($this->data);
+    }
+
+    // 递归排序
+    // 参数1  排序的数据
+    // 参数2  上级的id
+    // 参数3  第几级
+    protected function _tree($data,$parent_id=0,$level=0){
+        static $_ret = [];
+        foreach($data as $v){
+            if($v['parent_id']==$parent_id){
+                // 标签他的级别
+                $v['level'] = $level;
+                // 挪到排列之后的数组中
+                $_ret[]=$v;
+                // 找到$v的子分类
+                $this->_tree($data,$v['id'],$level+1);
+            }
+        }
+        return $_ret;
     }
 }
