@@ -1,4 +1,5 @@
 <?php
+session_start();
 // phpinfo();
 define('ROOT',__DIR__.'/../');
 

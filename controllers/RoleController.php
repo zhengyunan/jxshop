@@ -3,7 +3,7 @@ namespace controllers;
 
 use models\Role;
 
-class RoleController{
+class RoleController extends BaseController{
     // 列表页
     public function index()
     {
@@ -19,7 +19,8 @@ class RoleController{
 
     // 显示添加的表单
     public function create()
-    {   $priModel = new \models\Privilege;
+    { 
+        $priModel = new \models\Privilege;
         $data = $priModel->tree();
         view('role/create',[
             'data'=>$data
@@ -40,8 +41,16 @@ class RoleController{
     {
         $model = new Role;
         $data=$model->findOne($_GET['id']);
+        $priModel = new \models\Privilege;
+        $priData = $priModel->tree();
+        // 取出这个角色拥有的权限id
+        $priIds=$model->getPriIds($_GET['id']);
+        // var_dump($p);
         view('role/edit', [
-            'data' => $data,    
+            'data' => $data,
+            'priData'=>$priData,
+            'priIds'=>$priIds
+
         ]);
     }
 

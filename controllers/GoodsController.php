@@ -3,7 +3,7 @@ namespace controllers;
 
 use models\Goods;
 
-class GoodsController{
+class GoodsController extends BaseController{
     public function ajax_get_cat(){
         $id = (int)$_GET['id'];
         // var_dump($id);

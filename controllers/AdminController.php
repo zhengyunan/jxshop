@@ -3,7 +3,7 @@ namespace controllers;
 
 use models\Admin;
 
-class AdminController{
+class AdminController extends BaseController{
     // 列表页
     public function index()
     {
@@ -14,8 +14,12 @@ class AdminController{
 
     // 显示添加的表单
     public function create()
-    {
-        view('admin/create');
+    {   
+        $roleModel = new \models\Role;
+        $data = $roleModel->findAll();
+        // echo "<pre>";
+        // var_dump($data);die;
+        view('admin/create',$data);
     }
 
     // 处理添加表单
