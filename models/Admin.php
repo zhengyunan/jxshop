@@ -43,8 +43,18 @@ class Admin extends Model
         if($info){
           $_SESSION['id'] = $info['id'];
           $_SESSION['username'] = $info['username'];
+
+        //查看该管理员是否是超级管理员
+        $stmt = $this->_db->prepare('SELECT COUNT(*) FROM admin_role WHERE role_id=1 AND admin_id=?');
+        $stmt->execute([$_SESSION['id']]);
+        $c = $stmt->fetch(\PDO::FETCH_COLUMN);
+        if($c>0){
+            $_SESSION['root'] = true;
+
+        }
+        else
           $_SESSION['url_path'] = $this->getUalPath($_SESSION['id']);
-        //   var_dump($_SESSION);die;
+         
         }else{
             throw new \Exception("用户名或密码错误");
         }
@@ -65,9 +75,11 @@ class Admin extends Model
             $adminId,
         ]);
         $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        // var_dump($data);die;
         // 把二维数组转为一维数组
         $_ret = [];
         foreach($data as $v){
+            
             if(FALSE === strpos($v['url_path'],',')){
                  // 如果没有,，就直接拿过来
                  $_ret[] = $v['url_path'];
@@ -79,5 +91,6 @@ class Admin extends Model
             }
             
         }
+        return $_ret;
     }
 }
