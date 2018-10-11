@@ -11,13 +11,16 @@ class Goods extends Model
 
     // 会在添加和修改之前被调用
     public function _before_write(){
+        // 如果上传了新图片
+        if($_FILES['logo']['error']==0){
+
         // 如果修改就删除原图片
         $this->_delete_logo();
          $uploader = \libs\Uploader::make();
          $logo='/uploads/'.$uploader->upload('logo','goods');
          $this->data['logo']=$logo;
     }
-
+}
     // 在删除之前被调用
     public function _before_delete(){
         $this->_delete_logo();
@@ -37,10 +40,10 @@ class Goods extends Model
     }
 
     public function _after_write(){
-        // $data = "123123";
-        // echo "<pre>";
-        // var_dump($_POST);
-        // die;
+        $goodsId = isset($_GET['id'])?$_GET['id']:$this->data['id'];
+        // 先删除原来的属性
+        $stmt=$this->_db->prepare("DELETE FROM goods_attribute WHERE goods_id=?");
+        $stmt->execute([$goodsId]);
         $stmt = $this->_db->prepare("INSERT INTO goods_attribute(attr_name,attr_value,goods_id) VALUES(?,?,?) ");
         // 处理商品属性
         foreach($_POST['attr_name'] as $k=>$v){
@@ -48,7 +51,7 @@ class Goods extends Model
             $stmt->execute([
                 $v,
                 $_POST['attr_value'][$k],
-                $this->data['id'],
+                $goodsId,
             ]);
             // $this->_db->insert([
             //     'attr_name'=>$v,
@@ -56,14 +59,15 @@ class Goods extends Model
             //     'goods_id'=>$this->data['id'],
             // ],'goods_attribute');
         }
-
+        $stmt=$this->_db->prepare("DELETE FROM goods_sku WHERE goods_id=?");
+        $stmt->execute([$goodsId]);
         $stmt = $this->_db->prepare("INSERT INTO goods_sku
                 (goods_id,sku_name,stock,price) VALUES(?,?,?,?)");
 
         foreach($_POST['sku_name'] as $k => $v)
         {
             $stmt->execute([
-                $this->data['id'],
+                $goodsId,
                 $v,
                 $_POST['stock'][$k],
                 $_POST['price'][$k],
@@ -78,11 +82,26 @@ class Goods extends Model
         }
         // var_dump($_FILES);
         // die;
+        if(isset($_POST['del_image'])&&$_POST['del_image']!=''){
+            // 现根据id把图片路径取出来
+        $stmt=$this->_db->prepare("SELECT path FROM goods_image WHERE id IN({$_POST['del_image']})");
+        $stmt->execute();
+        $path = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        // 循环每个图片路径删除
+        foreach($path as $v){
+            @unlink(ROOT.'public/'.$v['path']);
+        }
+        // 从数据库把图片删除
+        $stmt = $this->_db->prepare("DELETE FROM goods_image WHERE id IN({$_POST['del_image']})");
+        $stmt->execute();
+        }
         $uploader = \libs\uploader::make();
         $stmt = $this->_db->prepare("INSERT INTO goods_image
                 (goods_id,path) VALUES(?,?)");
         $_tmp = [];
         foreach($_FILES['image']['name'] as $k=>$v){
+            if($_FILES['image']['error'][$k]==0){
+         
             $_tmp['name'] = $v;
             $_tmp['type'] = $_FILES['image']['type'][$k];
             $_tmp['size'] = $_FILES['image']['size'][$k];
@@ -94,9 +113,36 @@ class Goods extends Model
             // 调用函数
             $path = '/uploads/'.$uploader->upload('tmp','goods');
             $stmt->execute([
-                $this->data['id'],
+                $goodsId,
                 $path,
             ]);
         }
+               
+    }
+    }
+
+    public function getFullInfo($id){
+        // 获取商品的基本信息
+       $info= $this->findOne($id);
+        // 获取商品属性信息
+       $stmt = $this->_db->prepare("SELECT * FROM goods_attribute WHERE goods_id=?");
+       $stmt->execute([$id]);
+       $attrs = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+       // 获取商品图片
+       $stmt = $this->_db->prepare("SELECT * FROM goods_image WHERE goods_id=?");
+       $stmt->execute([$id]);
+       $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+           // 获取商品sku
+       $stmt = $this->_db->prepare("SELECT * FROM goods_sku WHERE goods_id=?");
+       $stmt->execute([$id]);
+       $skus = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+       
+    //    返回所有数据
+    return [
+        'info'=>$info,
+        'images'=>$images,
+        'skus'=>$skus,
+        'attrs'=>$attrs
+    ];
     }
 }

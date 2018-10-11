@@ -31,10 +31,11 @@ $c->$action();
 
 
 // $memcache = new memcache; 
+// //  创建一个Memcache对象  
 // $memcache -> connect('127.0.0.1', 11211) or die("连接失败"); 
-// $memcache -> set('name', array('一个','两个')); 
-// $val = $memcache->get('name'); 
-// print_r($val[1]); 
-// $val2 = $memcache->getServerStatus();
-// print_r($val2); 
+// // echo $memcache->getVersion();
+// $memcache -> set('name', ['张三'=>13,'李四'=>15]); 
+// $val = $memcache->get('name');
+// print_r($val); 
+// // $memcache->flush_all();
 // $memcache -> close(); 
