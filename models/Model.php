@@ -19,6 +19,7 @@ class Model{
     protected function _after_delete(){}
     
     public function insert(){
+        
         // // 取出数组中所有的键  组成新的数组
         // $keys = array_keys($this->data);
         // // 将新生成的数组转为字符串
@@ -153,7 +154,7 @@ class Model{
         // var_dump($this->data);
     }
 
-    // 递归排序
+    // 递归排序c
     // 参数1  排序的数据
     // 参数2  上级的id
     // 参数3  第几级

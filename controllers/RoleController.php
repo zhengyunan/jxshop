@@ -34,7 +34,7 @@ class RoleController extends BaseController{
         $model->fill($_POST);
         $model->insert();
         redirect('/role/index');
-    }
+    }  
 
     // 显示修改的表单
     public function edit()
@@ -43,9 +43,12 @@ class RoleController extends BaseController{
         $data=$model->findOne($_GET['id']);
         $priModel = new \models\Privilege;
         $priData = $priModel->tree();
+        echo "<pre>";
+        var_dump($priData);die;
         // 取出这个角色拥有的权限id
         $priIds=$model->getPriIds($_GET['id']);
-        // var_dump($p);
+        echo "<pre>";
+        var_dump($priIds);die;
         view('role/edit', [
             'data' => $data,
             'priData'=>$priData,

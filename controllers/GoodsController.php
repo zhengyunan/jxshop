@@ -42,14 +42,14 @@ class GoodsController extends BaseController{
         $model->insert();
         redirect('/goods/index');
     }
-
+   
     // 显示修改的表单
     public function edit()
     {
         $model = new Goods;
         $data=$model->getFullInfo($_GET['id']);
         echo "<pre>";
-        // var_dump($data);
+        // var_dump($data);   
         // 取出一级分类
         $model = new \models\Category;
         $topCat = $model->getCat();

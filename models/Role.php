@@ -22,7 +22,7 @@ class Role extends Model
         foreach($_POST['pri_id'] as $v)
         {
             $stmt->execute([
-                $v,
+                $v,   
                 $roleId,
             ]);
         }
