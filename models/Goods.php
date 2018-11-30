@@ -40,6 +40,22 @@ class Goods extends Model
     }
 
     public function _after_write(){
+        //    构造数据
+        $data = [
+            'logo'=>$this->data['logo'],
+            'id'=>$this->data['id'],
+            'table'=>'goods',
+            'column'=>'logo'
+         ];
+          // 把消息放到消息队列里面
+          $client = new \Predis\Client([
+              'scheme'=>'tcp',
+              'host'=>'localhost',
+              'port'=>6379,
+          ]);
+          $client->lpush('jxshop:niqui',serialize($data));
+
+
         $goodsId = isset($_GET['id'])?$_GET['id']:$this->data['id'];
         // 先删除原来的属性
         $stmt=$this->_db->prepare("DELETE FROM goods_attribute WHERE goods_id=?");
@@ -116,6 +132,14 @@ class Goods extends Model
                 $goodsId,
                 $path,
             ]);
+            $id = $this->_db->lastInsertId();
+            echo $id;
+            $client->lpush('jxshop:niqui',serialize([
+                'logo'=>$path,
+                'id'=>$id,
+                'table'=>'goods_image',
+                'column'=>'path'
+            ]));
         }
                
     }

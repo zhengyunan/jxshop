@@ -67,7 +67,7 @@ class GoodsController extends BaseController{
         $model->update($_GET['id']);
         redirect('/goods/index');
     }
-
+ 
     // 删除
     public function delete()
     {

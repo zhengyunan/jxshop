@@ -1,6 +1,6 @@
 <?php
 session_start();
-phpinfo();
+// phpinfo();
 define('ROOT',__DIR__.'/../');
 
 // 引入函数文件
@@ -13,7 +13,7 @@ function load($class){
 }
 
 spl_autoload_register('load');
-
+require(ROOT.'vendor/autoload.php');
 
 // 路由解析
 $controller = '\controllers\IndexController';

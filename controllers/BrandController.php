@@ -20,7 +20,14 @@ class BrandController extends BaseController{
 
     // 处理添加表单
     public function insert()
-    {
+    {   
+      
+        
+
+
+
+
+
         $model = new Brand;
         $model->fill($_POST);
         $model->insert();
